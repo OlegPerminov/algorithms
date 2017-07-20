@@ -1,5 +1,5 @@
 # Bubble sort
-def bubble_sort hash
+def bubble_sort(hash)
   array = hash.to_a
   size = array.size-1
   for i in 0...size
@@ -11,7 +11,7 @@ def bubble_sort hash
 end
 
 # Selection sort
-def selection_sort hash
+def selection_sort(hash)
   array = hash.to_a
   size = array.size-1
   for i in 0..size
@@ -25,7 +25,7 @@ def selection_sort hash
 end
 
 # Insertion sort
-def insertion_sort hash
+def insertion_sort(hash)
   array = hash.to_a
   for i in 0..array.size - 1
     tmp = array[i]
@@ -40,7 +40,7 @@ def insertion_sort hash
 end
 
 # Quick sort
-def qs_array array
+def qs_array(array)
   return array if array.size <= 1
 
   pivot_index = (array.size / 2)
@@ -60,7 +60,7 @@ def qs_array array
   return (qs_array(less_array) + [pivot_value] + qs_array(great_array))
 end
 
-def quick_sort hash
+def quick_sort(hash)
   array = hash.to_a
   qs_array(array).to_h
 end

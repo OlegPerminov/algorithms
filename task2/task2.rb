@@ -4,20 +4,23 @@ class Stack
     @tail = -1
   end
 
-  def push(number)
+  def push(value)
     @tail += 1
-    @stack[@tail] = number
+    @stack[@tail] = value
   end
 
   def pop
-    return "Stack is empty!" if @tail == -1
-    number = @stack.delete_at(@tail)
-    @tail -= 1
-    number
+    begin
+      raise "Stack is empty!" if @tail == -1
+      number = @stack.delete_at(@tail)
+      @tail -= 1
+      number
+    rescue => e
+      puts e.message
+    end
   end
 
   def display
-    return "Stack is empty!" if @tail == -1
     p @stack
   end
 
@@ -43,3 +46,8 @@ my_stack.pop
 my_stack.display
 
 my_stack.last
+
+my_stack.pop
+my_stack.pop
+my_stack.pop
+my_stack.pop
