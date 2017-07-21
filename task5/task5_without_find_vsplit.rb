@@ -86,44 +86,9 @@ class PersonTree
     return []
   end
 
-  def find_vsplit(range)
-    left_border = @root
-    right_border = @root
-
-    first = range.first
-    last = range.last
-
-    while(true) do
-      if right_border != nil
-        if right_border.data < last
-          right_border = right_border.right
-        else right_border.data > last
-          right_border = right_border.left
-        end
-      end
-      if left_border != nil
-        if left_border.data > first
-          left_border = left_border.left
-        elsif left_border.data < first
-          left_border = left_border.right
-        end
-      end
-      if left_border != right_border
-        if left_border != nil
-          return left_border.parent
-        elsif right_border != nil
-          return right_border.parent
-        end
-      end
-      if left_border == nil && right_border == nil
-        return @root
-      end
-    end
-  end
-
   def find_by_range(range)
     node_array = []
-    traverse(find_vsplit(range), range.first, range.last, node_array)
+    traverse(@root, range.first, range.last, node_array)
     return node_array
   end
 
@@ -252,6 +217,6 @@ puts "Find persons by age and height (include ranges):"
 persons = my_database.find_by_age_and_height(1..100, 5..195)
 print_persons(persons)
 
-puts "Find persons by age and height and weight (include ranges):"
+puts "Find persons by age and height and weight:"
 persons = my_database.find_by_age_and_height_and_weight(1..100, 5..195, 30..70)
 print_persons(persons)
