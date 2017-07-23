@@ -17,14 +17,14 @@ end
 
 class Node
   attr_accessor :left, :right, :parent
-  attr_accessor :data, :person_set
+  attr_accessor :data, :persons
 
   def initialize(data)
     @left = nil
     @right = nil
     @parent = nil
     @data = data
-    @person_set = Set.new
+    @persons = Set.new
   end
 end
 
@@ -34,7 +34,7 @@ class PersonTree
   def insert(new_data, person)
     if @root == nil
       @root = Node.new(new_data)
-      @root.person_set << person
+      @root.persons << person
       return
     end
 
@@ -46,9 +46,10 @@ class PersonTree
         current = current.right
 
         if current == nil
-          source.right = Node.new(new_data)
-          source.right.parent = source
-          source.right.person_set << person
+          current = Node.new(new_data)
+          source.right = current
+          current.parent = source
+          current.persons << person
           return
         end
       elsif new_data < current.data
@@ -56,13 +57,14 @@ class PersonTree
         current = current.left
 
         if current == nil
-          source.left = Node.new(new_data)
-          source.left.parent = source
-          source.left.person_set << person
+          current = Node.new(new_data)
+          source.left = current
+          current.parent = source
+          current.persons << person
           return
         end
       else
-        current.person_set << person
+        current.persons << person
         return
       end
     end
@@ -73,17 +75,16 @@ class PersonTree
     while(current != nil) do
       if value >= current.data
         if current.data == value
-          return [current]
+          return current
         end
         current = current.right
       elsif value < current.data
         if current.data == value
-          return [current]
+          return current
         end
         current = current.left
       end
     end
-    return []
   end
 
   def find_vsplit(range)
@@ -137,14 +138,14 @@ class PersonTree
 
   def get_persons(value)
     if value.is_a?(Range)
-      source = find_by_range(value)
-      persons = []
-      source.each {|person| persons << person.person_set} unless source.empty?
-      return persons
+      node_array = find_by_range(value)
+      person_array = []
+      node_array.each {|node| person_array << node.persons} unless node_array.empty?
+      return person_array
     else
-      source = find(value)
-      return [] if source == []
-      return [source[0].person_set] unless source[0] == nil
+      node = find(value)
+      return [] if node == nil
+      return [node.persons]
     end
   end
 end
@@ -205,53 +206,3 @@ class PersonDatabase
     valid_age & valid_salary & valid_height & valid_weight
   end
 end
-
-def print_persons persons
-  unless persons.empty?
-    for i in 0...persons.length
-      persons[i].each { |person| puts person } unless persons[i].empty?
-    end
-  else
-    puts "Persons are not found!"
-  end
-end
-
-puts "Creating database..."
-my_database = PersonDatabase.new(10)
-puts "Database has been created!"
-
-puts "Find persons by age:"
-persons = my_database.find_by_age(25)
-print_persons(persons)
-
-puts "Find persons by age range:"
-persons = my_database.find_by_age(1..100)
-print_persons(persons)
-
-puts "Find persons by salary range:"
-persons = my_database.find_by_salary(500..500000)
-print_persons(persons)
-
-puts "Find persons by height:"
-persons = my_database.find_by_height(175)
-print_persons(persons)
-
-puts "Find persons by height range:"
-persons = my_database.find_by_height(160..175)
-print_persons(persons)
-
-puts "Find persons by weight:"
-persons = my_database.find_by_weight(60)
-print_persons(persons)
-
-puts "Find persons by weight range:"
-persons = my_database.find_by_weight(50..80)
-print_persons(persons)
-
-puts "Find persons by age and height (include ranges):"
-persons = my_database.find_by_age_and_height(1..100, 5..195)
-print_persons(persons)
-
-puts "Find persons by age and height and weight (include ranges):"
-persons = my_database.find_by_age_and_height_and_weight(1..100, 5..195, 30..70)
-print_persons(persons)
