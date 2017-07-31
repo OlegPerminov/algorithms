@@ -32,7 +32,7 @@ class PersonTree
   attr_accessor :root
 
   def insert(new_data, person)
-    if @root == nil
+    if @root.nil?
       @root = Node.new(new_data)
       @root.persons << person
       return
@@ -40,12 +40,12 @@ class PersonTree
 
     current = @root
 
-    while(true)
+    loop do
       if new_data > current.data
         source = current
         current = current.right
 
-        if current == nil
+        if current.nil?
           current = Node.new(new_data)
           source.right = current
           current.parent = source
@@ -56,7 +56,7 @@ class PersonTree
         source = current
         current = current.left
 
-        if current == nil
+        if current.nil?
           current = Node.new(new_data)
           source.left = current
           current.parent = source
@@ -72,16 +72,12 @@ class PersonTree
 
   def find(value)
     current = @root
-    while(current != nil) do
+    until current.nil?
       if value >= current.data
-        if current.data == value
-          return current
-        end
+        return current if current.data == value
         current = current.right
       elsif value < current.data
-        if current.data == value
-          return current
-        end
+        return current if current.data == value
         current = current.left
       end
     end
@@ -94,15 +90,15 @@ class PersonTree
     first = range.first
     last = range.last
 
-    while(true) do
-      if right_border != nil
+    loop do
+      unless right_border.nil?
         if right_border.data < last
           right_border = right_border.right
-        else right_border.data > last
+        elsif right_border.data > last
           right_border = right_border.left
         end
       end
-      if left_border != nil
+      unless left_border.nil?
         if left_border.data > first
           left_border = left_border.left
         elsif left_border.data < first
@@ -110,26 +106,24 @@ class PersonTree
         end
       end
       if left_border != right_border
-        if left_border != nil
+        if !left_border.nil?
           return left_border.parent
-        elsif right_border != nil
+        elsif !right_border.nil?
           return right_border.parent
         end
       end
-      if left_border == nil && right_border == nil
-        return @root
-      end
+      return @root if left_border.nil? && right_border.nil?
     end
   end
 
   def find_by_range(range)
     node_array = []
     traverse(find_vsplit(range), range.first, range.last, node_array)
-    return node_array
+    node_array
   end
 
   def traverse(node, first, last, node_array)
-    if node != nil
+    unless node.nil?
       traverse(node.left, first, last, node_array)
       node_array << node if node.data >= first && node.data <= last
       traverse(node.right, first, last, node_array)
@@ -140,12 +134,12 @@ class PersonTree
     if value.is_a?(Range)
       node_array = find_by_range(value)
       person_array = []
-      node_array.each {|node| person_array << node.persons} unless node_array.empty?
-      return person_array
+      node_array.each { |node| person_array << node.persons } unless node_array.empty?
+      person_array
     else
       node = find(value)
-      return [] if node == nil
-      return [node.persons]
+      return [] if node.nil?
+      [node.persons]
     end
   end
 end
@@ -158,7 +152,7 @@ class PersonDatabase
     @weight_tree = PersonTree.new
 
     total.times do
-      person = Person.new(rand(100), (rand(10000000) / 10.0), rand(200), rand(200))
+      person = Person.new(rand(100), (rand(10_000_000) / 10.0), rand(200), rand(200))
       @age_tree.insert(person.age, person)
       @salary_tree.insert(person.salary, person)
       @height_tree.insert(person.height, person)

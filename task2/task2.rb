@@ -1,6 +1,6 @@
 class Stack
   def initialize
-    @stack = Array.new
+    @stack = []
     @tail = -1
   end
 
@@ -10,14 +10,12 @@ class Stack
   end
 
   def pop
-    begin
-      raise "Stack is empty!" if @tail == -1
-      number = @stack.delete_at(@tail)
-      @tail -= 1
-      number
-    rescue => e
-      puts e.message
-    end
+    raise "Stack is empty!" if @tail == -1
+    number = @stack.delete_at(@tail)
+    @tail -= 1
+    number
+  rescue => e
+    puts e.message
   end
 
   def display

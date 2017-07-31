@@ -1,5 +1,4 @@
 class Node
-
   attr_accessor :left, :right
   attr_accessor :data
 
@@ -10,32 +9,27 @@ class Node
   end
 end
 
-
 class Tree
-
   attr_accessor :root
 
   def insert(new_data)
-    if @root == nil
-      return @root = Node.new(new_data)
-    end
+    return @root = Node.new(new_data) if @root.nil?
 
     current = @root
 
-    while(true)
+    loop do
+      source = current
       if new_data >= current.data
-        source = current
         current = current.right
 
-        if current == nil
+        if current.nil?
           source.right = Node.new(new_data)
           return
         end
       else
-        source = current
         current = current.left
 
-        if current == nil
+        if current.nil?
           source.left = Node.new(new_data)
           return
         end
@@ -44,7 +38,7 @@ class Tree
   end
 
   def pre_order(local_root)
-    if local_root != nil
+    unless local_root.nil?
       print local_root.data, " "
       pre_order(local_root.left)
       pre_order(local_root.right)
@@ -52,7 +46,7 @@ class Tree
   end
 
   def post_order(local_root)
-    if local_root != nil
+    unless local_root.nil?
       post_order(local_root.left)
       post_order(local_root.right)
       print local_root.data, " "
@@ -60,13 +54,12 @@ class Tree
   end
 
   def in_order(local_root)
-    if local_root != nil
+    if local_root.nil?
       in_order(local_root.left)
       print local_root.data, " "
       in_order(local_root.right)
     end
   end
-
 end
 
 my_tree = Tree.new
